@@ -33,6 +33,9 @@ function App() {
         <Button variant="contained" color="primary">
             Mi Botón Material-UI
         </Button>
+        <h1 className="text-9xl font-bold underline">
+            Hello world!
+        </h1>
     </>
   )
 }
