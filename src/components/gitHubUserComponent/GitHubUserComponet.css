@@ -1,0 +1,21 @@
+.input_text {
+    background: #fff;
+
+    & label {
+        background: inherit;
+    }
+    &div .MuiInputBase-root{
+        background: inherit;
+    }
+    &TextField{
+        background: inherit;
+    }
+
+    & input {
+        background: inherit;
+    }
+}
+
+.cursor_pointer {
+    cursor: pointer;
+}
