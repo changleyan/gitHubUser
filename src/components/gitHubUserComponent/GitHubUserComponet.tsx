@@ -1,7 +1,8 @@
 import { motion } from 'framer-motion';
 import { Box, TextField } from '@mui/material';
 import './GitHubUserComponet.css'
-import EastIcon from '@mui/icons-material/East';
+import CardComponent from '../CardCmponent/CardComponent.tsx';
+import UserPrimaryDataComponent from '../UserPrimaryDataComponent/UserPrimaryDataComponent.tsx';
 
 function GitHubUserComponet() {
 
@@ -49,58 +50,14 @@ function GitHubUserComponet() {
             <div className="flex flex-col items-center px-24 sm:px-40">
                 <div
                     className="grid grid-cols-1 md:grid-cols-3 gap-y-32 md:gap-y-0 md:gap-x-24 w-full max-w-sm md:max-w-5xl -mt-24">
-                    <div
-                        className="relative flex flex-col rounded-[2rem] shadow hover:shadow-lg cursor_pointer
-                         overflow-hidden transition-shadow ease-in-out duration-300 bg-white justify-between"
-                    >
-                        <div className="flex flex-col items-center justify-center text-gray-700 gap-5 mb-5 ">
-                            <p className="text-3xl font-bold ">Perfil</p>
-                            <div className="md:max-w-160 w-4/5 text-base text-center italic font-medium ">
-                                Consulte los datos principales del usuario.
-                            </div>
-                        </div>
-                        <div className="flex items-center justify-center py-4 text-gray-800 bg-slate-200">
-                            <div className="mx-8 ">
-                                Mostrar <EastIcon></EastIcon>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div
-                        className="relative flex flex-col rounded-[2rem] shadow hover:shadow-lg cursor_pointer
-                         overflow-hidden transition-shadow ease-in-out duration-300 bg-white justify-between"
-                    >
-                        <div className="flex flex-col items-center justify-center text-gray-700 gap-5 mb-5 ">
-                            <p className="text-3xl font-bold ">Repositorios</p>
-                            <div className="md:max-w-160 w-4/5 text-base text-center italic font-medium ">
-                                Eche un vistazo al número de seguidores y repositorios.
-                            </div>
-                        </div>
-                        <div className="flex items-center justify-center py-4 text-gray-800 bg-slate-200">
-                            <div className="mx-8 ">
-                                Mostrar <EastIcon></EastIcon>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div
-                        className="relative flex flex-col rounded-[2rem] shadow hover:shadow-lg cursor_pointer
-                         overflow-hidden transition-shadow ease-in-out duration-300 bg-white justify-between"
-                    >
-                        <div className="flex flex-col items-center justify-center text-gray-700 gap-5 mb-5 ">
-                            <p className="text-3xl font-bold ">Detalles</p>
-                            <div className="md:max-w-160 w-4/5 text-base text-center italic font-medium ">
-                                Explore los últimos repositorios y sus resúmenes.
-                            </div>
-                        </div>
-                        <div className="flex items-center justify-center py-4 text-gray-800 bg-slate-200">
-                            <div className="mx-8 ">
-                                Mostrar <EastIcon></EastIcon>
-                            </div>
-                        </div>
-                    </div>
-
+                    <CardComponent title='Perfil' subtitle='Consulte los datos principales del usuario.'/>
+                    <CardComponent title='Repositorios' subtitle='Eche un vistazo al número de seguidores y repositorios.'/>
+                    <CardComponent title='Detalles' subtitle='Explore los últimos repositorios y sus resúmenes.'/>
                 </div>
+            </div>
+
+            <div className='flex justify-center mt-24 mb-20'>
+                <UserPrimaryDataComponent/>
             </div>
         </div>
     );
