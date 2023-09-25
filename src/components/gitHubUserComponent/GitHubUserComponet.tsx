@@ -5,6 +5,7 @@ import CardComponent from '../CardCmponent/CardComponent.tsx';
 import UserPrimaryDataComponent from '../UserPrimaryDataComponent/UserPrimaryDataComponent.tsx';
 import { useEffect, useRef, useState } from 'react';
 import WidgetProfileComponent from '../WidgetProfileComponent/WidgetProfileComponent.tsx';
+import RepoComponentList from '../RepoComponent/RepoComponentList.tsx';
 
 function GitHubUserComponet() {
 
@@ -23,6 +24,8 @@ function GitHubUserComponet() {
             }
         }
     }, [showRepositories]);
+
+
 
     return (
         <div className="flex flex-col flex-auto min-w-0">
@@ -65,7 +68,7 @@ function GitHubUserComponet() {
                 </svg>
             </Box>
 
-            <div className="flex flex-col items-center px-24 sm:px-40">
+            <div className="flex flex-col items-center px-24 sm:px-40 ">
                 <div
                     className="grid grid-cols-1 md:grid-cols-3 gap-y-32 md:gap-y-0 md:gap-x-24 w-full max-w-sm md:max-w-5xl -mt-24">
                     <CardComponent title='Perfil'
@@ -81,14 +84,15 @@ function GitHubUserComponet() {
                 </div>
             </div>
 
-            <div className='flex justify-center mt-24 mb-20'>
+            <div className='flex justify-center mt-24 mb-20 '>
                 { showRepositories && <UserPrimaryDataComponent/> }
-                <WidgetProfileComponent
-                    urlAvatar={`https://avatars.githubusercontent.com/u/20673011?v=4`}
-                    username={`LeyanChangReyes`}
-                    bio={`LeyanChangReyes web developer`}
-                    onClick={handleClickRepositories}
-                />
+                {/*<WidgetProfileComponent*/}
+                {/*    urlAvatar={`https://avatars.githubusercontent.com/u/20673011?v=4`}*/}
+                {/*    username={`LeyanChangReyes`}*/}
+                {/*    bio={`LeyanChangReyes web developer`}*/}
+                {/*    onClick={handleClickRepositories}*/}
+                {/*/>*/}
+                <RepoComponentList url='https://api.github.com/users/changleyan/repos' name='Leyan Chang reyes'/>
             </div>
             <div ref={ scrollTargetRef }></div>
         </div>
