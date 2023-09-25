@@ -3,8 +3,26 @@ import { Box, TextField } from '@mui/material';
 import './GitHubUserComponet.css'
 import CardComponent from '../CardCmponent/CardComponent.tsx';
 import UserPrimaryDataComponent from '../UserPrimaryDataComponent/UserPrimaryDataComponent.tsx';
+import { useEffect, useRef, useState } from 'react';
+import WidgetProfileComponent from '../WidgetProfileComponent/WidgetProfileComponent.tsx';
 
 function GitHubUserComponet() {
+
+    const scrollTargetRef = useRef(null);
+    const [showRepositories, setShowRepositories] = useState(false);
+
+    const handleClickRepositories = () => {
+        setShowRepositories(true);
+    };
+
+    useEffect(() => {
+        if (showRepositories) {
+            // Haz scroll hacia el elemento de destino
+            if (scrollTargetRef.current) {
+                scrollTargetRef.current.scrollIntoView({behavior: 'smooth'});
+            }
+        }
+    }, [showRepositories]);
 
     return (
         <div className="flex flex-col flex-auto min-w-0">
@@ -50,15 +68,29 @@ function GitHubUserComponet() {
             <div className="flex flex-col items-center px-24 sm:px-40">
                 <div
                     className="grid grid-cols-1 md:grid-cols-3 gap-y-32 md:gap-y-0 md:gap-x-24 w-full max-w-sm md:max-w-5xl -mt-24">
-                    <CardComponent title='Perfil' subtitle='Consulte los datos principales del usuario.'/>
-                    <CardComponent title='Repositorios' subtitle='Eche un vistazo al número de seguidores y repositorios.'/>
-                    <CardComponent title='Detalles' subtitle='Explore los últimos repositorios y sus resúmenes.'/>
+                    <CardComponent title='Perfil'
+                                   subtitle='Consulte los datos principales del usuario.'
+                                   onClick={handleClickRepositories}/>
+                    <CardComponent title='Repositorios'
+                                   subtitle='Eche un vistazo al número de seguidores y repositorios.'
+                                   onClick={handleClickRepositories}
+                    />
+                    <CardComponent title='Detalles'
+                                   subtitle='Explore los últimos repositorios y sus resúmenes.'
+                                   onClick={handleClickRepositories}/>
                 </div>
             </div>
 
             <div className='flex justify-center mt-24 mb-20'>
-                <UserPrimaryDataComponent/>
+                { showRepositories && <UserPrimaryDataComponent/> }
+                <WidgetProfileComponent
+                    urlAvatar={`https://avatars.githubusercontent.com/u/20673011?v=4`}
+                    username={`LeyanChangReyes`}
+                    bio={`LeyanChangReyes web developer`}
+                    onClick={handleClickRepositories}
+                />
             </div>
+            <div ref={ scrollTargetRef }></div>
         </div>
     );
 }

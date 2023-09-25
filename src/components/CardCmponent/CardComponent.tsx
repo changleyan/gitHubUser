@@ -1,14 +1,16 @@
 import EastIcon from '@mui/icons-material/East';
+import './CardComponent.css'
 
 interface CardComponentProps {
     title: string;
     subtitle: string;
+    onClick: () => void;
 }
 
 
-function CardComponent({title, subtitle}: CardComponentProps) {
+function CardComponent({title, subtitle, onClick}: CardComponentProps) {
     return (
-        <div
+        <div onClick={onClick}
             className="relative flex flex-col rounded-[2rem] shadow hover:shadow-lg cursor_pointer
                          overflow-hidden transition-shadow ease-in-out duration-300 bg-white justify-between"
         >

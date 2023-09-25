@@ -12,8 +12,8 @@ function UserPrimaryDataComponent(){
                 </motion.div>
 
                 <div className='flex flex-row gap-11'>
-                    <WidgetComponent bg_class='bg-green-300' numberData={'214'} title='Repositorios'/>
-                    <WidgetComponent bg_class='bg-teal-300' numberData={'80'} title='Seguidores'/>
+                    <WidgetComponent bg_class='bg-sky-200' numberData={'214'} title='Repositorios'/>
+                    <WidgetComponent bg_class='bg-sky-200' numberData={'80'} title='Seguidores'/>
                 </div>
             </div>
         </>
