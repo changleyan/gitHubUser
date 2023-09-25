@@ -6,27 +6,100 @@ import UserPrimaryDataComponent from '../UserPrimaryDataComponent/UserPrimaryDat
 import { useEffect, useRef, useState } from 'react';
 import WidgetProfileComponent from '../WidgetProfileComponent/WidgetProfileComponent.tsx';
 import RepoComponentList from '../RepoComponent/RepoComponentList.tsx';
+import axios from 'axios';
+
+interface GitHubResponse {
+    id: number;
+    login: string;
+    avatar_url: string;
+    repos_url: string;
+    name: string;
+    bio: string;
+    public_repos: number;
+    followers: number;
+}
 
 function GitHubUserComponet() {
 
-    const scrollTargetRef = useRef(null);
+    const scrollTargetRef = useRef<null | HTMLDivElement>(null);
+    const [showProfile, setShowProfile] = useState(false);
     const [showRepositories, setShowRepositories] = useState(false);
+    const [showDetails, setShowDetails] = useState(false);
+    const [searchText, setSearchText] = useState('');
+    const [userExists, setUserExists] = useState<boolean | null>(null);
+    const [userData, setUserData] = useState<GitHubResponse | null>(null);
+    const [error, setError] = useState<string | null>('');
 
     const handleClickRepositories = () => {
         setShowRepositories(true);
+        setShowProfile(false);
+        setShowDetails(false);
+    };
+
+    const handleClickProfile = () => {
+        setShowRepositories(false);
+        setShowProfile(true);
+        setShowDetails(false);
+    };
+
+    const handleClickDetails = () => {
+        setShowRepositories(false);
+        setShowProfile(false);
+        setShowDetails(true);
+    };
+
+    const handleInputChange = (e: any) => {
+        setSearchText(e.target.value);
+    };
+
+    const handleSearch = async () => {
+        if (searchText.trim() === '') {
+            setUserExists(null);
+            setUserData(null);
+            setError(null);
+            return;
+        }
+
+        try {
+            const response = await axios.get(`https://api.github.com/users/${ searchText }`);
+            if (response.status === 200) {
+                setUserExists(true);
+                setUserData(response.data);
+                setError(null);
+            }
+        } catch (err: any) {
+            if (err.response && err.response.status === 404) {
+                setUserExists(false);
+                setUserData(null);
+                setError(null);
+            } else {
+                setUserExists(null);
+                setUserData(null);
+                setError('Hubo un error al buscar al usuario');
+            }
+        }
+    };
+
+    const handleKeyPress = (e: any) => {
+        if (e.key === 'Enter') {
+            setShowRepositories(false);
+            setShowProfile(false);
+            setShowDetails(false);
+            handleSearch();
+        }
     };
 
     useEffect(() => {
-        if (showRepositories) {
+        if (showRepositories || showProfile || showDetails) {
             // Haz scroll hacia el elemento de destino
             if (scrollTargetRef.current) {
                 scrollTargetRef.current.scrollIntoView({behavior: 'smooth'});
             }
         }
-    }, [showRepositories]);
+    }, [showRepositories, showProfile, showDetails]);
 
 
-
+    // @ts-ignore
     return (
         <div className="flex flex-col flex-auto min-w-0">
             <Box className="relative h-full  px-16 pb-56 pt-24 sm:px-64 overflow-hidden dark:bg-gray-800 text-gray-100">
@@ -44,7 +117,11 @@ function GitHubUserComponet() {
                     </motion.div>
 
                     <div className="input_text flex flex-1 items-center rounded mx-8 w-4/5 ">
-                        <TextField label="Usuario" fullWidth variant="filled"/>
+                        <TextField label="Usuario"
+                                   value={ searchText }
+                                   onChange={ handleInputChange }
+                                   onKeyUp={ handleKeyPress }
+                                   fullWidth variant="filled"/>
                     </div>
                 </div>
 
@@ -68,31 +145,41 @@ function GitHubUserComponet() {
                 </svg>
             </Box>
 
-            <div className="flex flex-col items-center px-24 sm:px-40 ">
-                <div
-                    className="grid grid-cols-1 md:grid-cols-3 gap-y-32 md:gap-y-0 md:gap-x-24 w-full max-w-sm md:max-w-5xl -mt-24">
+            { userExists === true && <div className="flex flex-col items-center px-24 sm:px-40 ">
+                <motion.div initial={ {opacity: 0} } animate={ {opacity: 1, transition: {delay: 0.6}} }
+                            className="grid grid-cols-1 md:grid-cols-3 gap-y-32 md:gap-y-0 md:gap-x-24 w-full max-w-sm md:max-w-5xl -mt-24">
                     <CardComponent title='Perfil'
                                    subtitle='Consulte los datos principales del usuario.'
-                                   onClick={handleClickRepositories}/>
+                                   onClick={ handleClickProfile }/>
                     <CardComponent title='Repositorios'
                                    subtitle='Eche un vistazo al número de seguidores y repositorios.'
-                                   onClick={handleClickRepositories}
+                                   onClick={ handleClickRepositories }
                     />
                     <CardComponent title='Detalles'
                                    subtitle='Explore los últimos repositorios y sus resúmenes.'
-                                   onClick={handleClickRepositories}/>
-                </div>
-            </div>
+                                   onClick={ handleClickDetails }/>
+                </motion.div>
+            </div> }
 
-            <div className='flex justify-center mt-24 mb-20 '>
-                { showRepositories && <UserPrimaryDataComponent/> }
-                {/*<WidgetProfileComponent*/}
-                {/*    urlAvatar={`https://avatars.githubusercontent.com/u/20673011?v=4`}*/}
-                {/*    username={`LeyanChangReyes`}*/}
-                {/*    bio={`LeyanChangReyes web developer`}*/}
-                {/*    onClick={handleClickRepositories}*/}
-                {/*/>*/}
-                <RepoComponentList url='https://api.github.com/users/changleyan/repos' name='Leyan Chang reyes'/>
+            <div className='flex justify-center mt-24 mb-20 text-gray-800'>
+
+                { error && <p>Error: { error }</p> }
+
+                { userExists === false && <h2>El usuario no existe</h2> }
+
+                { (userExists === true && showRepositories) && <UserPrimaryDataComponent
+                    fullName={ userData?.name }
+                    fallowers={ `${ userData?.followers }` }
+                    repos={ `${ userData?.public_repos }` }/> }
+
+                { (userExists === true && showProfile) && <WidgetProfileComponent
+                    urlAvatar={ userData?.avatar_url }
+                    username={ userData?.login }
+                    fullName={ userData?.name }
+                    bio={ userData?.bio }/> }
+
+                { (userExists === true && showDetails) && <RepoComponentList name={userData?.name} url={userData?.repos_url}/> }
+
             </div>
             <div ref={ scrollTargetRef }></div>
         </div>
