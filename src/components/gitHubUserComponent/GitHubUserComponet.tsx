@@ -29,6 +29,7 @@ function GitHubUserComponet() {
     const [userExists, setUserExists] = useState<boolean | null>(null);
     const [userData, setUserData] = useState<GitHubResponse | null>(null);
     const [error, setError] = useState<string | null>('');
+    const [loading, setLoading] = useState<boolean>(false);
 
     const handleClickRepositories = () => {
         setShowRepositories(true);
@@ -57,6 +58,7 @@ function GitHubUserComponet() {
             setUserExists(null);
             setUserData(null);
             setError(null);
+            setLoading(false);
             return;
         }
 
@@ -66,8 +68,10 @@ function GitHubUserComponet() {
                 setUserExists(true);
                 setUserData(response.data);
                 setError(null);
+                setLoading(false);
             }
         } catch (err: any) {
+            setLoading(false);
             if (err.response && err.response.status === 404) {
                 setUserExists(false);
                 setUserData(null);
@@ -82,6 +86,8 @@ function GitHubUserComponet() {
 
     const handleKeyPress = (e: any) => {
         if (e.key === 'Enter') {
+            setUserExists(null);
+            setLoading(true);
             setShowRepositories(false);
             setShowProfile(false);
             setShowDetails(false);
@@ -99,7 +105,6 @@ function GitHubUserComponet() {
     }, [showRepositories, showProfile, showDetails]);
 
 
-    // @ts-ignore
     return (
         <div className="flex flex-col flex-auto min-w-0">
             <Box className="relative h-full  px-16 pb-56 pt-24 sm:px-64 overflow-hidden dark:bg-gray-800 text-gray-100">
@@ -159,6 +164,19 @@ function GitHubUserComponet() {
                                    subtitle='Explore los últimos repositorios y sus resúmenes.'
                                    onClick={ handleClickDetails }/>
                 </motion.div>
+            </div> }
+
+            {loading && <div className='flex justify-center mb-5'>
+                <button type="button" className="text-gray-800 text-center flex justify-center flex-col items-center"
+                        disabled>
+                    <svg className="animate-spin h-5 w-5 mr-3 text-center " viewBox="0 0 24 24">
+                        <circle className="opacity-250" cx="120" cy="120" r="120" stroke="currentColor"
+                                strokeWidth="4"></circle>
+                        <path className="opacity-75" fill="currentColor"
+                              d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                    </svg>
+                    <p>Processing...</p>
+                </button>
             </div> }
 
             <div className='flex justify-center mt-24 mb-20 text-gray-800'>
